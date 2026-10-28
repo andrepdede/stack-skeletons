@@ -1,0 +1,9 @@
+# Local services used by the skeletons (04 uses pgvector; 02/03/05 may use Redis for queues/cache).
+services:
+  postgres:
+    image: pgvector/pgvector:pg16
+    environment: { POSTGRES_PASSWORD: dev, POSTGRES_DB: app }
+    ports: ["5432:5432"]
+  redis:
+    image: redis:7
+    ports: ["6379:6379"]

@@ -1,0 +1,19 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: Webhook receiver (API Gateway HTTP API -> Lambda). UNTESTED against a real AWS account.
+Resources:
+  WebhookFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Runtime: nodejs20.x
+      Handler: handler.handler
+      CodeUri: dist/
+      MemorySize: 256
+      Timeout: 10
+      Events:
+        Webhook:
+          Type: HttpApi
+          Properties: { Path: /webhook, Method: POST }
+Outputs:
+  Url:
+    Value: !Sub 'https://${ServerlessHttpApi}.execute-api.${AWS::Region}.amazonaws.com/webhook'

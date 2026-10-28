@@ -1,0 +1,29 @@
+name: ci
+on: [push, pull_request]
+jobs:
+  node:
+    runs-on: ubuntu-latest
+    strategy: { matrix: { dir: [02-agents-toolloop-ts, 03-mcp-server-ts, 07-aws-lambda-sam-ts] } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: 20 }
+      - run: npm install && npm run typecheck && npm test
+        working-directory: ${{ matrix.dir }}
+  python:
+    runs-on: ubuntu-latest
+    strategy: { matrix: { dir: [01-agents-langgraph-py, 04-rag-pgvector-py, 05-api-fastapi-py] } }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: '3.12' }
+      - run: pip install -r requirements.txt && pytest
+        working-directory: ${{ matrix.dir }}
+  go:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with: { go-version: '1.22' }
+      - run: go test ./...
+        working-directory: 08-service-go
